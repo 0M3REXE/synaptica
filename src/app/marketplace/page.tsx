@@ -1,14 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-type Agent = {
-  id: string;
-  name: string;
-  builder: string;
-  category: string;
-  priceEth: number;
-};
+import { useEffect, useMemo, useState } from "react";
+import { fetchRecentMintedAgents, type MintedAgent } from "@/lib/aiAgentNft";
 
 const CATEGORIES = [
   "Customer Support",
@@ -21,13 +14,14 @@ const CATEGORIES = [
   "Finance & Ops",
 ] as const;
 
-const MOCK_AGENTS: Agent[] = Array.from({ length: 24 }).map((_, i) => ({
-  id: `agent-${i + 1}`,
-  name: `Agent ${i + 1}`,
-  builder: ["Orbitian", "Dish Studio", "MoonDancer", "Nebula Labs"][i % 4],
-  category: CATEGORIES[i % CATEGORIES.length],
-  priceEth: Number((0.1 + (i % 7) * 0.07).toFixed(2)),
-}));
+type UiAgent = {
+  id: string;
+  name: string;
+  image?: string;
+  owner: string;
+  category?: string;
+  priceEth?: number;
+};
 
 export default function MarketplacePage() {
   const [query, setQuery] = useState("");
@@ -36,19 +30,43 @@ export default function MarketplacePage() {
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
+  const [loading, setLoading] = useState(true);
+  const [minted, setMinted] = useState<MintedAgent[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const items = await fetchRecentMintedAgents(100);
+        if (mounted) setMinted(items);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const data = useMemo(() => {
-    let d = [...MOCK_AGENTS];
+    let d: UiAgent[] = minted.map((m) => ({
+      id: m.tokenId,
+      name: m.metadata?.name || `Agent #${m.tokenId}`,
+      image: m.metadata?.image,
+      owner: m.owner,
+    }));
     if (category !== "all") d = d.filter((a) => a.category === category);
     if (query.trim()) {
       const q = query.toLowerCase();
-      d = d.filter((a) => a.name.toLowerCase().includes(q) || a.builder.toLowerCase().includes(q));
+      d = d.filter((a) => a.name.toLowerCase().includes(q) || a.owner.toLowerCase().includes(q));
     }
     switch (sort) {
       case "priceAsc":
-        d.sort((a, b) => a.priceEth - b.priceEth);
+        d.sort((a, b) => (a.priceEth ?? Infinity) - (b.priceEth ?? Infinity));
         break;
       case "priceDesc":
-        d.sort((a, b) => b.priceEth - a.priceEth);
+        d.sort((a, b) => (b.priceEth ?? -Infinity) - (a.priceEth ?? -Infinity));
         break;
       case "new":
         d = d.reverse();
@@ -57,7 +75,7 @@ export default function MarketplacePage() {
         break;
     }
     return d;
-  }, [category, query, sort]);
+  }, [category, query, sort, minted]);
 
   const total = data.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -127,32 +145,39 @@ export default function MarketplacePage() {
 
         {/* Results summary */}
         <div className="body-space-mono text-sm text-[#858584] mb-4">
-          {total} results{category !== "all" ? ` in ${category}` : ""}
+          {loading ? "Loading…" : `${total} results${category !== "all" ? ` in ${category}` : ""}`}
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {pageData.map((a) => (
-            <a key={a.id} href={`/artist/${encodeURIComponent(a.builder)}`} className="rounded-[20px] overflow-hidden bg-[var(--background-secondary)]">
-              <div className="relative aspect-square grid place-items-center text-[#858584]">{a.name}</div>
+            <div key={a.id} className="rounded-[20px] overflow-hidden bg-[var(--background-secondary)]">
+              <div className="relative aspect-square bg-background grid place-items-center overflow-hidden">
+                {a.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={a.image} alt={a.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-[#858584]">{a.name}</div>
+                )}
+              </div>
               <div className="p-6">
                 <div className="h5-work-sans text-[22px]">{a.name}</div>
                 <div className="flex items-center gap-3 mt-2">
                   <div className="size-6 rounded-full bg-neutral-500" />
-                  <div className="body-work-sans text-[#858584]">{a.builder}</div>
+                  <div className="body-work-sans text-[#858584]">{a.owner.slice(0, 6)}…{a.owner.slice(-4)}</div>
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <div className="body-space-mono text-[#858584]">Price</div>
-                    <div className="body-space-mono">{a.priceEth.toFixed(2)} ETH</div>
+                    <div className="body-space-mono">—</div>
                   </div>
                   <div className="text-right">
                     <div className="body-space-mono text-[#858584]">Category</div>
-                    <div className="body-space-mono">{a.category}</div>
+                    <div className="body-space-mono">—</div>
                   </div>
                 </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
 
