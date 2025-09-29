@@ -1,36 +1,255 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🤖 Synaptica - AI Agent Marketplace
+A decentralized marketplace for AI agents built on Avalanche blockchain, featuring NFT-based ownership, secure authentication, and interactive chat interfaces.
 
-## Getting Started
+What is Synaptica?
+Synaptica is a decentralized web application that lets users create, own, buy, sell, and interact with AI agents as NFTs on the Avalanche blockchain. It combines blockchain technology, secure wallet authentication, and interactive AI chat interfaces to create a marketplace for digital agents.
 
-First, run the development server:
+Features (Detailed)
+1. Wallet Integration & Authentication
+Connect MetaMask or compatible Web3 wallet
+Authenticate via cryptographic message signing (no passwords)
+All transactions (minting, buying, selling) are signed and executed from the user's wallet
+2. AI Agent Creation & Minting
+Create custom AI agents: name, description, avatar image, system prompt
+Mint agents as ERC-721 NFTs on Avalanche Fuji testnet
+Pay AVAX for gas fees
+Store agent metadata on IPFS for decentralization
+3. Marketplace for AI Agents
+List agents for sale, set price in AVAX
+Browse all available agents with metadata, price, seller info
+Buy agents directly, transferring NFT ownership on-chain
+4. Interactive Chat Interface
+Owners chat with their AI agents using built-in chat UI
+Agents respond based on their system prompt and capabilities
+Chat history and context maintained for personalized interactions
+5. User Profiles & Dashboard
+Profile page shows owned and purchased agents
+Dashboard includes statistics (agents, purchases, sales) and recent activity
+Manage listings, view transaction history, access account settings
+6. Secure Authentication & Session Management
+Wallet-based authentication using cryptographic signatures
+Secure session management, no passwords or sensitive data stored
+7. Real-time Updates & State Management
+Marketplace and profile pages update dynamically
+React hooks and context for efficient state management
+8. Glassmorphism & Modern UI/UX
+Frosted glass effects, gradients, backdrop blurs
+Responsive layouts for desktop, tablet, mobile
+Floating navigation bar, smooth transitions, micro-interactions
+9. Analytics & Activity Tracking
+View statistics about activity, agent performance, marketplace trends
+Activity feed shows recent actions (minting, buying, selling, chatting)
+10. IPFS Integration
+Agent metadata and images stored on IPFS
+App converts IPFS URLs to HTTP for browser compatibility
+Technical Details
+Frontend: Next.js 15, TypeScript, Tailwind CSS, React 19
+Blockchain: Avalanche Fuji Testnet, Solidity smart contracts (ERC-721), Ethers.js
+Backend: Next.js API routes for authentication, NFT operations, IPFS integration
+Smart Contracts: Custom contracts for agent minting, marketplace listing, transfers
+Storage: IPFS for agent metadata and images
+Security: Wallet-based authentication, input validation, error boundaries
+Performance: Turbopack, code splitting, image optimization
+Testing: ESLint, TypeScript type checking
+Example User Flow
+Connect Wallet: Click "Connect Wallet" and sign in with MetaMask
+Create Agent: Fill out agent details and mint as NFT
+List for Sale: List agent on marketplace, set price
+Buy Agent: Purchase agent, transfer ownership
+Chat: Owner chats with agent via profile dashboard
+Manage Profile: View stats, activity, manage agents
+Why is Synaptica Unique?
+Combines AI and blockchain for true digital ownership of intelligent agents
+Decentralized, censorship-resistant, user-controlled
+Modern, beautiful UI with advanced design and responsive features
+Secure, passwordless authentication and transaction management
+🏗️ Tech Stack
+Frontend
+Framework: Next.js 15.5.0 with App Router
+Language: TypeScript 5
+Styling: Tailwind CSS 4
+Icons: Heroicons (SVG)
+State Management: React hooks and context
+Blockchain
+Network: Avalanche Fuji Testnet
+Smart Contracts: Solidity
+Web3 Library: Ethers.js 6.15.0
+Development: Hardhat 3.0.1
+Development Tools
+Linting: ESLint 9 with Next.js config
+Build Tool: Turbopack (Next.js)
+Package Manager: npm/yarn/pnpm
+🚀 Getting Started
+Prerequisites
+Node.js 18+
+npm, yarn, or pnpm
+MetaMask or compatible Web3 wallet
+Avalanche Fuji testnet AVAX for transactions
+Installation
+Clone the repository
 
-```bash
+git clone https://github.com/lhcee3/ai-agent-marketplace-2.git
+cd ai-agent-marketplace-2
+Install dependencies
+
+npm install
+# or
+yarn install
+# or
+pnpm install
+Run the development server
+
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
-```
+Open your browser Navigate to http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Environment Setup
+Create a .env.local file in the root directory:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Add your environment variables here
+NEXT_PUBLIC_CHAIN_ID=43113
+NEXT_PUBLIC_RPC_URL=https://api.avax-test.network/ext/bc/C/rpc
+📁 Project Structure
+src/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes
+│   │   ├── auth/          # Authentication endpoints
+│   │   ├── chat/          # Chat functionality
+│   │   ├── nft/           # NFT operations
+│   │   └── pinata/        # IPFS integration
+│   ├── artist/            # Artist profile pages
+│   ├── chat/              # Chat interface
+│   ├── create/            # AI agent creation
+│   ├── docs/              # Documentation
+│   ├── marketplace/       # Marketplace browsing
+│   └── profile/           # User dashboard
+├── components/            # Reusable React components
+│   └── ConnectWallet.tsx  # Wallet connection component
+├── lib/                   # Utility libraries
+│   ├── aiAgentMarketplace.ts
+│   ├── aiAgentNft.ts
+│   ├── eth.ts
+│   └── mint-nft-real.ts
+contracts/                 # Smart contracts
+├── AiAgentMarketplace.sol
+└── AiAgentNFT.sol
+public/                    # Static assets
+└── README.md
+🎮 Usage Guide
+1. Connect Your Wallet
+Click "Connect Wallet" in the navigation
+Approve the connection in MetaMask
+Sign the authentication message
+2. Create an AI Agent
+Navigate to "Create" page
+Fill in agent details (name, description, capabilities)
+Upload avatar image
+Mint as NFT (requires AVAX for gas fees)
+3. Browse Marketplace
+Explore available AI agents
+View detailed agent profiles
+Purchase agents with AVAX
+4. Chat with Agents
+Access owned agents from your profile
+Start conversations in the chat interface
+Enjoy personalized AI interactions
+5. Manage Profile
+View your statistics and activity
+Monitor owned and created agents
+Access account settings
+🔧 Key Components
+ConnectWallet Component
+Handles wallet connection and authentication
+Manages user session state
+Provides secure sign-in flow
+Profile Dashboard
+User statistics and analytics
+Activity feed with recent actions
+Quick access to main features
+Account settings and preferences
+Artist Pages
+Public profiles for each user
+Wallet address-based routing
+Clean, minimal design focus
+Chat Interface
+Real-time conversations with AI agents
+Message history and context
+Responsive design for all devices
+🎨 Design System
+Color Palette
+Primary: Blue (#3B82F6) to Purple (#8B5CF6) gradients
+Background: Black (#000000) with transparency layers
+Text: White (#FFFFFF) with various opacity levels
+Accents: Blue-200, Purple-400, Green-400, Yellow-400
+Typography
+Headings: Space Mono font family
+Body: Work Sans font family
+Display: Gradient text effects with bg-clip-text
+Effects
+Glassmorphism: backdrop-blur-xl with transparent backgrounds
+Animations: Smooth transitions and hover effects
+Shadows: Layered shadow effects with color variants
+🔒 Security Features
+Wallet Authentication: Cryptographic signature verification
+Session Management: Secure token-based sessions
+Input Validation: Type-safe form handling
+Error Boundaries: Graceful error handling
+📱 Responsive Design
+Mobile First: Optimized for mobile devices
+Tablet Support: Adaptive layouts for tablets
+Desktop Enhanced: Full feature set on desktop
+Touch Friendly: Large tap targets and gestures
+🚀 Performance Optimizations
+Next.js 15: Latest framework with automatic optimizations
+Turbopack: Fast development builds
+Code Splitting: Automatic route-based splitting
+Image Optimization: Next.js Image component
+Tree Shaking: Unused code elimination
+🧪 Testing
+# Run linting
+npm run lint
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Type checking
+npx tsc --noEmit
+📦 Build and Deploy
+# Build for production
+npm run build
 
-## Learn More
+# Start production server
+npm start
+🤝 Contributing
+Fork the repository
+Create a feature branch (git checkout -b feature/amazing-feature)
+Commit your changes (git commit -m 'Add amazing feature')
+Push to the branch (git push origin feature/amazing-feature)
+Open a Pull Request
+📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-To learn more about Next.js, take a look at the following resources:
+🛠️ Development Notes
+Next.js 15 Compatibility
+Uses React 19 with concurrent features
+Async params handled with React.use()
+App Router with server/client components
+Blockchain Integration
+Avalanche Fuji testnet deployment
+ERC-721 NFT standards
+Gas-optimized smart contracts
+Performance Considerations
+Lazy loading for heavy components
+Optimized asset delivery
+Efficient re-rendering patterns
+📞 Support
+For support, email support@synaptica.ai or create an issue in the GitHub repository.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🎯 Roadmap
+ Mobile app development
+ AI model training integration
+ Cross-chain compatibility
+ Advanced chat features
+ Marketplace analytics
+ Social features and communities
+Built with ❤️ by the Synaptica Team
